@@ -292,12 +292,22 @@
             <variable name="width" select="$col-widths[$i]/@width" as="xs:integer"/>
             <variable name="text" select="$r/*[$i]/string()"/>
             
-            <if test="$i gt 1">
-               <text>| </text>
-            </if>
-            <value-of select="$text"/>
-            <value-of select="string-join(for $c in (1 to ($width - string-length($text))) return ' ', '')"/>
+            <text>| </text>
+
+           <if test="$text eq ' ' and $r-pos gt 1">
+             <!--it is not a space, do not remove it, some kind of eof-->
+             <text>-</text>
+           </if>
+           <if test="$text ne ' ' or $r-pos eq 1">
+             <!--it is not a space, do not remove it, some kind of eof-->
+             <value-of select="$text"/>
+           </if>
+           
+           <value-of select="string-join(for $c in (1 to ($width - string-length($text))) return ' ', '')"/>
             <text> </text>
+            <if test="$i eq count($headers)">
+              <text>| </text>
+            </if>
          </for-each>
 
          <if test="$r-pos eq 1">
@@ -306,12 +316,14 @@
             <for-each select="1 to count($headers)">
                <variable name="i" select="."/>
                <variable name="width" select="$col-widths[$i]/@width" as="xs:integer"/>
-
-               <if test="$i gt 1">
-                  <text>| </text>
-               </if>
+               <variable name="value" select="string-join(for $c in (1 to $width) return '-', '')"/>
+              
+               <text>| </text>
                <value-of select="string-join(for $c in (1 to $width) return '-', '')"/>
                <text> </text>
+              <if test="$i eq count($headers)">
+                <text>| </text>
+              </if>
             </for-each>
          </if>
          
