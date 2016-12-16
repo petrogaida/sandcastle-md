@@ -298,12 +298,21 @@
              <!--it is not a space, do not remove it, some kind of eof-->
              <text>-</text>
            </if>
+           
            <if test="$text ne ' ' or $r-pos eq 1">
              <!--it is not a space, do not remove it, some kind of eof-->
              <value-of select="$text"/>
            </if>
+
+           <if test="$text eq '' and $r-pos gt 1">
+             <text>-</text>
+             <value-of select="string-join(for $c in (1 to ($width - 1)) return ' ', '')"/>
+           </if>
+
+           <if test="$text ne ''">
+             <value-of select="string-join(for $c in (1 to ($width - string-length($text))) return ' ', '')"/>
+           </if>
            
-           <value-of select="string-join(for $c in (1 to ($width - string-length($text))) return ' ', '')"/>
             <text> </text>
             <if test="$i eq count($headers)">
               <text>| </text>
